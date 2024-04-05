@@ -1,1 +1,1 @@
-# MetaSearch_KnowledGraph
+# MetaSearch_KnowledgeGraph
