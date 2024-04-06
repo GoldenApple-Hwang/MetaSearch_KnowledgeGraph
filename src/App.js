@@ -155,6 +155,13 @@ function App() {
     function handleClick(event, d) {
       console.log(d.label);
       setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
+
+      if (window.Android && window.Android.receivePhotoName) {
+        window.Android.receivePhotoName(d.label); // d.label은 클릭된 노드의 사진 이름
+        //window.Android.receivePhotoName('20240229_175347'); //이건 테스트 헤보는 코드
+      } else {
+        console.log("Android interface not found. ")
+      }
     }
     
     simulation.on("tick", tick);
