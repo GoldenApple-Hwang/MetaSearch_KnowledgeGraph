@@ -55,6 +55,9 @@ function App() {
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
+    // SVG 내부를 초기화하여 이전 그래프 제거
+    d3.select(svgRef.current).selectAll("*").remove();
+
     const svg = d3.select(svgRef.current);
 
     svg
@@ -81,34 +84,34 @@ function App() {
       .attr("fill", (d) => color(d.group))
       .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
-      simulation.on("tick", () => {
-        link
-          .attr("x1", (d) => d.source.x)
-          .attr("y1", (d) => d.source.y)
-          .attr("x2", (d) => d.target.x)
-          .attr("y2", (d) => d.target.y);
-  
-        node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-      });
+    simulation.on("tick", () => {
+      link
+        .attr("x1", (d) => d.source.x)
+        .attr("y1", (d) => d.source.y)
+        .attr("x2", (d) => d.target.x)
+        .attr("y2", (d) => d.target.y);
 
-      function dragstarted(event) {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        event.subject.fx = event.subject.x;
-        event.subject.fy = event.subject.y;
-      }
-  
-      function dragged(event) {
-        event.subject.fx = event.x;
-        event.subject.fy = event.y;
-      }
-  
-      //이걸 안하면 위치 고정 되는 듯
-  
-      function dragended(event) {
-        if (!event.active) simulation.alphaTarget(0);
-        event.subject.fx = null;
-        event.subject.fy = null;
-      }
+      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
+    });
+
+    function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
+
+    function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+    }
+
+    //이걸 안하면 위치 고정 되는 듯
+
+    function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+    }
 
     // Cleanup on component unmount
     return () => simulation.stop();
