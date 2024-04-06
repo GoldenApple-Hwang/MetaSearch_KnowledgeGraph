@@ -130,6 +130,21 @@ function App() {
       .style("fill", "black")
       .attr("font-size", 15);
 
+    node
+      .filter((d) => d.group !== 0) //사진 노드가 아닌 노드
+      .append("circle") //이 노드는 그냥 원으로 표현
+      .attr("r", 30)
+      .attr("fill", (d) => color(d.group));
+
+    node
+      .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링
+      .append("image")
+      .attr("href", "https://zrr.kr/eaEi") // 임시로 넣어놓은 사진 나중에 변경 필요
+      .attr("x", -35)
+      .attr("y", -35)
+      .attr("width", 60)
+      .attr("height", 60);
+
     simulation.on("tick", tick);
     function tick() {
       link
@@ -137,7 +152,7 @@ function App() {
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
-        
+
       // link text의 positions 업데이트
       linkText
         .attr("x", (d) => (d.source.x + d.target.x) / 2)
