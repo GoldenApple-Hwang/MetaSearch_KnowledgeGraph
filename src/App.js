@@ -64,7 +64,21 @@ function App() {
       .attr("viewBox", [-width / 2, -height / 2, width, height])
       .attr("style", "max-width: 100%; height: auto;");
 
-    const link = svg
+    //줌 대상이 될 g 요소를 추가
+    const g = svg.append("g");
+
+    // g 요소에 zoom 기능을 적용
+    const zoomed = (event) => {
+      g.attr("transform", event.transform);
+    };
+
+    //zoom 기능 정의. scaleExtent 부분을 수정하여 zoom의 한계를 조정할 수 있음
+    const zoom = d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed);
+
+    // svg에 zoom 기능을 적용, 하지만 실제 변환은 g 요소에 적용됨
+    svg.call(zoom);
+
+    const link = g
       .append("g")
       .attr("stroke", "#999")
       .attr("stroke-opacity", 0.6)
@@ -73,7 +87,7 @@ function App() {
       .join("line")
       .attr("stroke-width", (d) => Math.sqrt(d.value));
 
-    const node = svg
+    const node = g
       .append("g")
       .attr("stroke", "#fff")
       .attr("stroke-width", 1.5)
@@ -84,15 +98,17 @@ function App() {
       .attr("fill", (d) => color(d.group))
       .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
-    simulation.on("tick", () => {
+    simulation.on("tick", tick);
+    function tick() {
       link
         .attr("x1", (d) => d.source.x)
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
 
-      node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
-    });
+      // g 요소의 위치를 업데이트합니다.
+      node.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+    }
 
     function dragstarted(event) {
       if (!event.active) simulation.alphaTarget(0.3).restart();
