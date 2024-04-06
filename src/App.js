@@ -120,15 +120,6 @@ function App() {
           .on("end", dragended)
       );
 
-    //node에 label 추가
-    node
-      .filter((d) => d.group !== 0) //사진이 아닌 노드
-      .append("text")
-      .text((d) => d.label)
-      .attr("text-anchor", "middle")
-      .attr("dy", ".35em")
-      .style("fill", "black")
-      .attr("font-size", 15);
 
     node
       .filter((d) => d.group !== 0) //사진 노드가 아닌 노드
@@ -145,6 +136,16 @@ function App() {
       .attr("width", 60)
       .attr("height", 60);
 
+    //node에 label 추가
+    node
+      .filter((d) => d.group !== 0) //사진이 아닌 노드
+      .append("text")
+      .text((d) => d.label)
+      .attr("text-anchor", "middle")
+      .attr("dy", ".35em")
+      .style("fill", "black")
+      .attr("font-size", 15);
+    
     simulation.on("tick", tick);
     function tick() {
       link
