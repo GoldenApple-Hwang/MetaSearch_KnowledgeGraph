@@ -15,6 +15,8 @@ function App() {
 
   const [graphData, setGraphData] = useState({ nodes: [], links: [] }); // neo4j에서 그래프를 그릴 데이터를 받아와서 저장
 
+  const [selectedNode, setSelectedNode] = useState(null); // 클릭된 노드 데이터 저장
+
   useEffect(() => {
     // dbName 값이 설정된 경우에만 데이터를 가져옴
     if (dbName) {
@@ -145,6 +147,15 @@ function App() {
       .attr("dy", ".35em")
       .style("fill", "black")
       .attr("font-size", 15);
+
+    // 사진 노드에 클릭 이벤트를 별도로 추가
+    node.filter((d) => d.group === 0).on("click", handleClick);
+
+    // 클릭 이벤트 핸들러
+    function handleClick(event, d) {
+      console.log(d.label);
+      setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
+    }
     
     simulation.on("tick", tick);
     function tick() {
