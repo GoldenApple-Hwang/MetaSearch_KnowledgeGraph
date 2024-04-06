@@ -48,10 +48,13 @@ function App() {
       .forceSimulation(nodes)
       .force(
         "link",
-        d3.forceLink(links).id((d) => d.id) //.distance(100)
+        d3
+          .forceLink(links)
+          .id((d) => d.id)
+          .distance(200)
       )
-      .force("charge", d3.forceManyBody().strength(-300))
-      .force("collide", d3.forceCollide(10)) //.strength(0.7))
+      .force("charge", d3.forceManyBody().strength(-1000))
+      .force("collide", d3.forceCollide(50)) //.strength(0.7))
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
@@ -80,23 +83,29 @@ function App() {
 
     const link = g
       .append("g")
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.6)
       .selectAll("line")
       .data(links)
       .join("line")
-      .attr("stroke-width", (d) => Math.sqrt(d.value));
+      .attr("stroke-width", 1.5)
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", 0.6);
 
     const node = g
       .append("g")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1.5)
-      .selectAll("circle")
+      //.attr("stroke", "white") //"(d) => color(d.group)"
+      //.attr("stroke-width", (d) => Math.sqrt(d.value));
+      .selectAll(".node")
       .data(nodes)
-      .join("circle")
-      .attr("r", 15)
-      .attr("fill", (d) => color(d.group))
-      .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+      .enter()
+      .append("g")
+      .attr("class", "node")
+      .call(
+        d3
+          .drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended)
+      );
 
     simulation.on("tick", tick);
     function tick() {
@@ -121,12 +130,13 @@ function App() {
       event.subject.fy = event.y;
     }
 
-    //이걸 안하면 위치 고정 되는 듯
-
     function dragended(event) {
       if (!event.active) simulation.alphaTarget(0);
-      event.subject.fx = null;
-      event.subject.fy = null;
+      //null값을 주면 위치 고정 됨
+      //event.subject.fx = null;
+      //event.subject.fx = null;
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
     }
 
     // Cleanup on component unmount
