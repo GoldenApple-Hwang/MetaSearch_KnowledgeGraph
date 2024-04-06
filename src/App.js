@@ -79,6 +79,7 @@ function App() {
       .join("circle")
       .attr("r", 15)
       .attr("fill", (d) => color(d.group))
+      .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
 
       simulation.on("tick", () => {
         link
@@ -89,6 +90,25 @@ function App() {
   
         node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
       });
+
+      function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
+  
+      function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
+  
+      //이걸 안하면 위치 고정 되는 듯
+  
+      function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
 
     // Cleanup on component unmount
     return () => simulation.stop();
