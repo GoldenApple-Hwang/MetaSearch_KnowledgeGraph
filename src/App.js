@@ -90,6 +90,19 @@ function App() {
       .attr("stroke", "#999")
       .attr("stroke-opacity", 0.6);
 
+    //link에 label 추가
+    const linkText = g
+      .append("g")
+      .selectAll("text")
+      .data(links)
+      .join("text")
+      .text((d) => d.type)
+      .style("fill", "red")
+      .attr("font-size", 15)
+      //.attr("dx", 50) // 링크 중간보다 약간 오프셋을 주기 위해 조정
+      .attr("dy", ".35em");
+    //.attr("startOffset", "50%");
+
     const node = g
       .append("g")
       //.attr("stroke", "white") //"(d) => color(d.group)"
@@ -107,6 +120,16 @@ function App() {
           .on("end", dragended)
       );
 
+    //node에 label 추가
+    node
+      .filter((d) => d.group !== 0) //사진이 아닌 노드
+      .append("text")
+      .text((d) => d.label)
+      .attr("text-anchor", "middle")
+      .attr("dy", ".35em")
+      .style("fill", "black")
+      .attr("font-size", 15);
+
     simulation.on("tick", tick);
     function tick() {
       link
@@ -114,6 +137,11 @@ function App() {
         .attr("y1", (d) => d.source.y)
         .attr("x2", (d) => d.target.x)
         .attr("y2", (d) => d.target.y);
+        
+      // link text의 positions 업데이트
+      linkText
+        .attr("x", (d) => (d.source.x + d.target.x) / 2)
+        .attr("y", (d) => (d.source.y + d.target.y) / 2);
 
       // g 요소의 위치를 업데이트합니다.
       node.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
