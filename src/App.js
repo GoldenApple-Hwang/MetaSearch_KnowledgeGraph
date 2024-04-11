@@ -22,7 +22,7 @@ function App() {
     if (dbName) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://223.194.154.167/api/graphData/${dbName}`);
+          const response = await fetch(`http://223.194.155.47/api/graphData/${dbName}`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
@@ -132,7 +132,7 @@ function App() {
     node
       .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링
       .append("image")
-      .attr("href", "https://zrr.kr/eaEi") // 임시로 넣어놓은 사진 나중에 변경 필요
+      .attr("href", "https://i.ibb.co/X75tPzm/image.jpg") // 임시로 넣어놓은 사진 나중에 변경 필요
       .attr("x", -35)
       .attr("y", -35)
       .attr("width", 60)
