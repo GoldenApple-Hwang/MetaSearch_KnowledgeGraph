@@ -84,28 +84,6 @@ function App() {
     // svg에 zoom 기능을 적용, 하지만 실제 변환은 g 요소에 적용됨
     svg.call(zoom);
 
-    // const link = g
-    //   .append("g")
-    //   .selectAll("line")
-    //   .data(links)
-    //   .join("line")
-    //   .attr("stroke-width", 1.5)
-    //   .attr("stroke", "#999")
-    //   .attr("stroke-opacity", 0.6);
-
-    // //link에 label 추가
-    // const linkText = g
-    //   .append("g")
-    //   .selectAll("text")
-    //   .data(links)
-    //   .join("text")
-    //   .text((d) => d.type)
-    //   .style("fill", "red")
-    //   .attr("font-size", 15)
-    //   //.attr("dx", 50) // 링크 중간보다 약간 오프셋을 주기 위해 조정
-    //   .attr("dy", ".35em");
-    // //.attr("startOffset", "50%");
-
     // 각 링크에 대한 path 생성
     const linkPath = g
       .append("g")
@@ -254,17 +232,6 @@ function App() {
             return ""; // 필요 없는 경우 회전시키지 않습니다.
           }
         });
-
-      //   link
-      //     .attr("x1", (d) => d.source.x)
-      //     .attr("y1", (d) => d.source.y)
-      //     .attr("x2", (d) => d.target.x)
-      //     .attr("y2", (d) => d.target.y);
-
-      //   // link text의 positions 업데이트
-      //   linkText
-      //     .attr("x", (d) => (d.source.x + d.target.x) / 2)
-      //     .attr("y", (d) => (d.source.y + d.target.y) / 2);
 
       // g 요소의 위치를 업데이트합니다.
       node.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
