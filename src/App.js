@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import './App.css';
-import { useParams } from 'react-router-dom';
+import "./App.css";
+import { useParams } from "react-router-dom";
 
 function App() {
-
   const svgRef = useRef();
 
   const width = 1440; //1440 × 2560
@@ -22,9 +21,11 @@ function App() {
     if (dbName) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://223.194.155.47/api/graphData/${dbName}`);
+          const response = await fetch(
+            `http://113.198.85.4/api/graphData/${dbName}`
+          );
           if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error("Network response was not ok");
           }
           const data = await response.json();
           setGraphData(data);
@@ -83,27 +84,57 @@ function App() {
     // svg에 zoom 기능을 적용, 하지만 실제 변환은 g 요소에 적용됨
     svg.call(zoom);
 
-    const link = g
-      .append("g")
-      .selectAll("line")
-      .data(links)
-      .join("line")
-      .attr("stroke-width", 1.5)
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.6);
+    // const link = g
+    //   .append("g")
+    //   .selectAll("line")
+    //   .data(links)
+    //   .join("line")
+    //   .attr("stroke-width", 1.5)
+    //   .attr("stroke", "#999")
+    //   .attr("stroke-opacity", 0.6);
 
-    //link에 label 추가
-    const linkText = g
+    // //link에 label 추가
+    // const linkText = g
+    //   .append("g")
+    //   .selectAll("text")
+    //   .data(links)
+    //   .join("text")
+    //   .text((d) => d.type)
+    //   .style("fill", "red")
+    //   .attr("font-size", 15)
+    //   //.attr("dx", 50) // 링크 중간보다 약간 오프셋을 주기 위해 조정
+    //   .attr("dy", ".35em");
+    // //.attr("startOffset", "50%");
+
+    // 각 링크에 대한 path 생성
+    const linkPath = g
       .append("g")
-      .selectAll("text")
+      .selectAll(".link")
       .data(links)
-      .join("text")
-      .text((d) => d.type)
+      .enter()
+      .append("path")
+      .attr("id", (d, i) => `linkPath-${i}`)
+      .attr(
+        "d",
+        (d) => `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`
+      )
+      .attr("stroke", "#999")
+      .attr("fill", "none");
+
+    // 각 링크의 텍스트를 위한 text 요소 생성
+    const linkLabels = g
+      .append("g")
+      .selectAll(".link-label")
+      .data(links)
+      .enter()
+      .append("text")
+      .style("text-anchor", "middle")
+      .style("fill", "#555")
       .style("fill", "red")
-      .attr("font-size", 15)
-      //.attr("dx", 50) // 링크 중간보다 약간 오프셋을 주기 위해 조정
-      .attr("dy", ".35em");
-    //.attr("startOffset", "50%");
+      .append("textPath") // textPath를 사용하여 path 위에 텍스트를 놓음
+      .attr("xlink:href", (d, i) => `#linkPath-${i}`) // 해당 링크의 path ID를 참조
+      .attr("startOffset", "50%") // 선의 가운데에 텍스트가 오도록 설정
+      .text((d) => d.type);
 
     const node = g
       .append("g")
@@ -121,7 +152,6 @@ function App() {
           .on("drag", dragged)
           .on("end", dragended)
       );
-
 
     node
       .filter((d) => d.group !== 0) //사진 노드가 아닌 노드
@@ -160,22 +190,49 @@ function App() {
         window.Android.receivePhotoName(d.label); // d.label은 클릭된 노드의 사진 이름
         //window.Android.receivePhotoName('20240229_175347'); //이건 테스트 헤보는 코드
       } else {
-        console.log("Android interface not found. ")
+        console.log("Android interface not found. ");
       }
     }
-    
+
     simulation.on("tick", tick);
     function tick() {
-      link
-        .attr("x1", (d) => d.source.x)
-        .attr("y1", (d) => d.source.y)
-        .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => d.target.y);
+      // 링크의 path를 업데이트
+      linkPath.attr("d", (d) => {
+        // 왼쪽에서 오른쪽으로 선을 그리도록 시작점과 끝점을 결정합니다.
+        const x1 = d.source.x < d.target.x ? d.source.x : d.target.x;
+        const x2 = d.source.x < d.target.x ? d.target.x : d.source.x;
+        const y1 = d.source.x < d.target.x ? d.source.y : d.target.y;
+        const y2 = d.source.x < d.target.x ? d.target.y : d.source.y;
+        return `M${x1},${y1} L${x2},${y2}`;
+      });
 
-      // link text의 positions 업데이트
-      linkText
-        .attr("x", (d) => (d.source.x + d.target.x) / 2)
-        .attr("y", (d) => (d.source.y + d.target.y) / 2);
+      // link text의 위치와 방향을 업데이트
+      // textPath 요소의 위치를 업데이트합니다. (시작점과 끝점을 고려)
+      linkLabels
+        .attr("startOffset", "50%")
+        .style("text-anchor", "middle")
+        .attr("transform", (d) => {
+          // 선이 왼쪽에서 오른쪽으로 그려져야 한다면 텍스트를 회전시킵니다.
+          if (d.source.x > d.target.x) {
+            // 회전의 중심점을 계산합니다.
+            const x = (d.source.x + d.target.x) / 2;
+            const y = (d.source.y + d.target.y) / 2;
+            return `rotate(180, ${x}, ${y})`;
+          } else {
+            return ""; // 필요 없는 경우 회전시키지 않습니다.
+          }
+        });
+
+      //   link
+      //     .attr("x1", (d) => d.source.x)
+      //     .attr("y1", (d) => d.source.y)
+      //     .attr("x2", (d) => d.target.x)
+      //     .attr("y2", (d) => d.target.y);
+
+      //   // link text의 positions 업데이트
+      //   linkText
+      //     .attr("x", (d) => (d.source.x + d.target.x) / 2)
+      //     .attr("y", (d) => (d.source.y + d.target.y) / 2);
 
       // g 요소의 위치를 업데이트합니다.
       node.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
