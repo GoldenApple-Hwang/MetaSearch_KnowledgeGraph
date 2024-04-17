@@ -121,6 +121,19 @@ function App() {
       .attr("stroke", "#999")
       .attr("fill", "none");
 
+    // First, create the rectangles for the link backgrounds
+    const linkBackgrounds = g
+      .append("g")
+      .selectAll(".link-background")
+      .data(links)
+      .enter()
+      .append("rect")
+      .attr("class", "link-background")
+      .attr("width", 60)
+      .attr("height", 20)
+      .attr("fill", "white"); // Background color same as the link stroke
+    // Other attributes like x, y, width, and height will be set in the tick function
+
     // 각 링크의 텍스트를 위한 text 요소 생성
     const linkLabels = g
       .append("g")
@@ -205,6 +218,25 @@ function App() {
         const y2 = d.source.x < d.target.x ? d.target.y : d.source.y;
         return `M${x1},${y1} L${x2},${y2}`;
       });
+
+      // Define the size of the background rectangle based on your text size
+      const rectWidth = 60; // Adjust as needed
+      const rectHeight = 20; // Adjust as needed
+
+      linkBackgrounds
+        .attr("x", (d) => (d.source.x + d.target.x) / 2 - rectWidth / 2)
+        .attr("y", (d) => (d.source.y + d.target.y) / 2 - rectHeight / 2)
+        .attr("width", rectWidth)
+        .attr("height", rectHeight)
+        .attr("transform", (d) => {
+          const angle =
+            (Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x) *
+              180) /
+            Math.PI;
+          const xMid = (d.source.x + d.target.x) / 2;
+          const yMid = (d.source.y + d.target.y) / 2;
+          return `rotate(${angle},${xMid},${yMid})`;
+        });
 
       // link text의 위치와 방향을 업데이트
       // textPath 요소의 위치를 업데이트합니다. (시작점과 끝점을 고려)
