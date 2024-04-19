@@ -127,6 +127,35 @@ function App() {
       .attr("startOffset", "50%") // 선의 가운데에 텍스트가 오도록 설정
       .text((d) => d.type);
 
+
+      const linkHoverLine = g
+      .append("g")
+      .selectAll(".link-hover")
+      .data(links)
+      .enter()
+      .append("path")
+      .attr("class", "link-hover")
+      .attr("stroke-width", 10) // 충분히 넓게 만들어 사용자가 쉽게 호버할 수 있게 합니다.
+      .attr("stroke", "transparent") // 기본적으로 보이지 않게 만듭니다.
+      .attr("fill", "none")
+      .on("mouseover", function (event, d) {
+        // 호버 시 보이는 스타일을 적용합니다.
+        d3.select(this).attr("stroke", "rgba(21, 169, 255, 0.5)");
+      })
+      .on("mouseout", function (event, d) {
+        // 호버가 끝나면 원래 상태로 돌립니다.
+        d3.select(this).attr("stroke", "transparent");
+      })
+      .on("click", function (event, d) {
+        // 클릭 시 상태를 토글합니다.
+        const isActive = d3.select(this).classed("active");
+        d3.select(this).classed("active", !isActive);
+        d3.select(this).attr(
+          "stroke",
+          isActive ? "transparent" : "rgba(21, 169, 255, 0.5)"
+        );
+      });
+
     const node = g
       .append("g")
       //.attr("stroke", "white") //"(d) => color(d.group)"
@@ -172,7 +201,7 @@ function App() {
     // 사진 노드에 클릭 이벤트를 별도로 추가
     node.filter((d) => d.group === 0).on("click", handleClick);
 
-    // 클릭 이벤트 핸들러
+    // 클릭 이벤트 핸들러. 안드로이드와 통신하기 위해
     function handleClick(event, d) {
       console.log(d.label);
       setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
@@ -184,6 +213,7 @@ function App() {
         console.log("Android interface not found. ");
       }
     }
+
 
     simulation.on("tick", tick);
     function tick() {
@@ -198,7 +228,7 @@ function App() {
       });
 
       // Define the size of the background rectangle based on your text size
-      const rectWidth = 60; // Adjust as needed
+      const rectWidth = 40; // Adjust as needed
       const rectHeight = 20; // Adjust as needed
 
       linkBackgrounds
@@ -235,6 +265,8 @@ function App() {
 
       // g 요소의 위치를 업데이트합니다.
       node.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
+
+      linkHoverLine.attr("d", d => `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`);
     }
 
     function dragstarted(event) {
