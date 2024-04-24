@@ -107,8 +107,8 @@ function App() {
       .enter()
       .append("rect")
       .attr("class", "link-background")
-      .attr("width", 60)
-      .attr("height", 20)
+      //.attr("width", 60)
+      //.attr("height", 5)
       .attr("fill", "white"); // Background color same as the link stroke
     // Other attributes like x, y, width, and height will be set in the tick function
 
@@ -229,7 +229,7 @@ function App() {
 
       // Define the size of the background rectangle based on your text size
       const rectWidth = 40; // Adjust as needed
-      const rectHeight = 20; // Adjust as needed
+      const rectHeight = 2; // Adjust as needed
 
       linkBackgrounds
         .attr("x", (d) => (d.source.x + d.target.x) / 2 - rectWidth / 2)
