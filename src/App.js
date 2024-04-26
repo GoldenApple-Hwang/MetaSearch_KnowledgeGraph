@@ -182,7 +182,7 @@ function App() {
     node
       .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링
       .append("image")
-      .attr("href", "https://i.ibb.co/X75tPzm/image.jpg") // 임시로 넣어놓은 사진 나중에 변경 필요
+      .attr("href", (d) => `/images/${d.label}`) // 서버의 public/images 위치에 있는 사진
       .attr("x", -35)
       .attr("y", -35)
       .attr("width", 60)
