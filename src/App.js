@@ -42,8 +42,24 @@ function App() {
   useEffect(() => {
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const links = graphData.links.map((d) => ({ ...d }));
-    const nodes = graphData.nodes.map((d) => ({ ...d }));
+    // "텍스트"라는 타입을 제외한 링크 필터링
+    const links = graphData.links.filter((link) => link.type !== "텍스트");
+
+    // 활성화된 링크에서 사용되는 모든 노드 ID 수집
+    const nodeIds = new Set(
+      links.flatMap((link) => [link.source, link.target])
+    );
+
+    // 활성화된 노드만 필터링
+    const nodes = graphData.nodes.filter((node) => nodeIds.has(node.id));
+
+    // 노드 데이터를 정리한 후, 링크 데이터에서 참조하는 source와 target을 객체로 변환
+    const nodeById = new Map(nodes.map((node) => [node.id, node]));
+    links.forEach((link) => {
+      link.source = nodeById.get(link.source);
+      link.target = nodeById.get(link.target);
+    });
+
     console.log(links);
     console.log(nodes);
 
@@ -127,8 +143,7 @@ function App() {
       .attr("startOffset", "50%") // 선의 가운데에 텍스트가 오도록 설정
       .text((d) => d.type);
 
-
-      const linkHoverLine = g
+    const linkHoverLine = g
       .append("g")
       .selectAll(".link-hover")
       .data(links)
@@ -214,7 +229,6 @@ function App() {
       }
     }
 
-
     simulation.on("tick", tick);
     function tick() {
       // 링크의 path를 업데이트
@@ -266,7 +280,10 @@ function App() {
       // g 요소의 위치를 업데이트합니다.
       node.attr("transform", (d) => `translate(${d.x}, ${d.y})`);
 
-      linkHoverLine.attr("d", d => `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`);
+      linkHoverLine.attr(
+        "d",
+        (d) => `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`
+      );
     }
 
     function dragstarted(event) {
