@@ -192,16 +192,50 @@ function App() {
       .filter((d) => d.group !== 0) //사진 노드가 아닌 노드
       .append("circle") //이 노드는 그냥 원으로 표현
       .attr("r", 30)
-      .attr("fill", (d) => color(d.group));
+      .attr("fill", (d) => color(d.group))
+      .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
+
+    //이미지에 테두리를 추가하기 위한 사각현 노드
+    node
+      .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링 사진 노드
+      .append("rect")
+      .attr("x", -35)
+      .attr("y", -35)
+      .attr("width", 60)
+      .attr("height", 60)
+      .style("stroke", "rgba(21, 169, 255, 0.5)") // 초기 테두리 스타일 지정
+      .style("stroke-width", "10px")
+      .style("fill", "none")
+      .style("visibility", "hidden") // 처음에는 테두리를 숨김
+      .attr("class", "image-border"); // 클래스 이름 추가
 
     node
-      .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링
+      .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링 사진 노드
       .append("image")
       .attr("href", (d) => `/images/${d.label}`) // 서버의 public/images 위치에 있는 사진
       .attr("x", -35)
       .attr("y", -35)
       .attr("width", 60)
-      .attr("height", 60);
+      .attr("height", 60)
+      .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
+
+      //테두리 적용 코드
+      function handleNodeClick(event, d) {
+        setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
+      
+        // 모든 노드의 하이라이트 클래스를 제거합니다.
+        d3.selectAll(".node circle").classed("highlight", false);
+        d3.selectAll(".node .image-border").style("visibility", "hidden");
+      
+        // 클릭된 노드가 이미지 노드인 경우
+        if (d.group === 0) {
+          // 이미지 노드의 테두리 표시
+          d3.select(event.currentTarget.parentNode).select(".image-border").style("visibility", "visible");
+        } else {
+          // 일반 노드(원)의 하이라이트 클래스 적용
+          d3.select(event.currentTarget).classed("highlight", true);
+        }
+      }
 
     //node에 label 추가
     node
