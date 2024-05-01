@@ -212,7 +212,7 @@ function App() {
     node
       .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링 사진 노드
       .append("image")
-      .attr("href", (d) => `/images/${d.label}`) // 서버의 public/images 위치에 있는 사진
+      .attr("href", (d) => `/images/${dbName}/${d.label}`) // 서버의 public/images/${dbName} 위치에 있는 사진
       .attr("x", -35)
       .attr("y", -35)
       .attr("width", 60)
@@ -333,11 +333,11 @@ function App() {
 
     function dragended(event) {
       if (!event.active) simulation.alphaTarget(0);
-      //null값을 주면 위치 고정 됨
-      //event.subject.fx = null;
-      //event.subject.fx = null;
-      event.subject.fx = event.subject.x;
-      event.subject.fy = event.subject.y;
+      //null값을 주면 위치 고정 안됨
+      event.subject.fx = null;
+      event.subject.fy = null;
+      // event.subject.fx = event.subject.x;
+      // event.subject.fy = event.subject.y;
     }
 
     // Cleanup on component unmount
