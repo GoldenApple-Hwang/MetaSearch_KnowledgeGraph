@@ -219,23 +219,25 @@ function App() {
       .attr("height", 60)
       .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
 
-      //테두리 적용 코드
-      function handleNodeClick(event, d) {
-        setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
-      
-        // 모든 노드의 하이라이트 클래스를 제거합니다.
-        d3.selectAll(".node circle").classed("highlight", false);
-        d3.selectAll(".node .image-border").style("visibility", "hidden");
-      
-        // 클릭된 노드가 이미지 노드인 경우
-        if (d.group === 0) {
-          // 이미지 노드의 테두리 표시
-          d3.select(event.currentTarget.parentNode).select(".image-border").style("visibility", "visible");
-        } else {
-          // 일반 노드(원)의 하이라이트 클래스 적용
-          d3.select(event.currentTarget).classed("highlight", true);
-        }
+    //테두리 적용 코드
+    function handleNodeClick(event, d) {
+      setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
+
+      // 모든 노드의 하이라이트 클래스를 제거합니다.
+      d3.selectAll(".node circle").classed("highlight", false);
+      d3.selectAll(".node .image-border").style("visibility", "hidden");
+
+      // 클릭된 노드가 이미지 노드인 경우
+      if (d.group === 0) {
+        // 이미지 노드의 테두리 표시
+        d3.select(event.currentTarget.parentNode)
+          .select(".image-border")
+          .style("visibility", "visible");
+      } else {
+        // 일반 노드(원)의 하이라이트 클래스 적용
+        d3.select(event.currentTarget).classed("highlight", true);
       }
+    }
 
     //node에 label 추가
     node
