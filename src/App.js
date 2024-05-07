@@ -192,7 +192,7 @@ function App() {
       .filter((d) => d.group !== 0) //사진 노드가 아닌 노드
       .append("circle") //이 노드는 그냥 원으로 표현
       .attr("r", 30)
-      .attr("fill", (d) => color(d.group))
+      .attr("fill", "#4daf62")
       .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
 
     //이미지에 테두리를 추가하기 위한 사각현 노드
