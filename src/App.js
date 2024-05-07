@@ -205,7 +205,7 @@ function App() {
       .attr("width", 60)
       .attr("height", 60)
       .style("stroke", "rgba(21, 169, 255, 0.5)") // 초기 테두리 스타일 지정
-      .style("stroke-width", "10px")
+      .style("stroke-width", "8px")
       .style("fill", "none")
       .style("visibility", "hidden") // 처음에는 테두리를 숨김
       .attr("class", "image-border"); // 클래스 이름 추가
