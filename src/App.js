@@ -239,12 +239,18 @@ function App() {
         d3.select(event.currentTarget).classed("highlight", true);
       }
 
-      // 연결된 모든 링크의 색상 변경
+      // 연결된 모든 링크의 색상을 토글합니다.
       d3.selectAll(".link-hover").each(function (linkData) {
         if (linkData.source.id === d.id || linkData.target.id === d.id) {
-          d3.select(this).attr("stroke", "rgba(21, 169, 255, 0.5)"); // 색상 변경
+          const isActive = d3.select(this).classed("active");
+          d3.select(this).classed("active", !isActive);
+          d3.select(this).attr(
+            "stroke",
+            isActive ? "transparent" : "rgba(21, 169, 255, 0.5)"
+          );
         } else {
-          d3.select(this).attr("stroke", "transparent"); // 기타 링크는 다시 투명으로 설정
+          d3.select(this).classed("active", false);
+          d3.select(this).attr("stroke", "transparent");
         }
       });
     }
