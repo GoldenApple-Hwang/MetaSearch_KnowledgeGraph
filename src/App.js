@@ -150,17 +150,18 @@ function App() {
       .enter()
       .append("path")
       .attr("class", "link-hover")
+      .attr("id", (d) => `link-${d.id}`) // 데이터를 기반으로 ID 설정
       .attr("stroke-width", 10) // 충분히 넓게 만들어 사용자가 쉽게 호버할 수 있게 합니다.
       .attr("stroke", "transparent") // 기본적으로 보이지 않게 만듭니다.
       .attr("fill", "none")
-      .on("mouseover", function (event, d) {
-        // 호버 시 보이는 스타일을 적용합니다.
-        d3.select(this).attr("stroke", "rgba(21, 169, 255, 0.5)");
-      })
-      .on("mouseout", function (event, d) {
-        // 호버가 끝나면 원래 상태로 돌립니다.
-        d3.select(this).attr("stroke", "transparent");
-      })
+      // .on("mouseover", function (event, d) { //이거는 모바일에서 필요 없는 기능임
+      //   // 호버 시 보이는 스타일을 적용합니다.
+      //   d3.select(this).attr("stroke", "rgba(21, 169, 255, 0.5)");
+      // })
+      // .on("mouseout", function (event, d) {
+      //   // 호버가 끝나면 원래 상태로 돌립니다.
+      //   d3.select(this).attr("stroke", "transparent");
+      // })
       .on("click", function (event, d) {
         // 클릭 시 상태를 토글합니다.
         const isActive = d3.select(this).classed("active");
@@ -345,15 +346,15 @@ function App() {
     function dragended(event) {
       if (!event.active) simulation.alphaTarget(0);
       //null값을 주면 위치 고정 안됨
-      event.subject.fx = null;
-      event.subject.fy = null;
-      // event.subject.fx = event.subject.x;
-      // event.subject.fy = event.subject.y;
+      //event.subject.fx = null;
+      //event.subject.fy = null;
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
     }
 
     // Cleanup on component unmount
     return () => simulation.stop();
-  }, [graphData]);
+  }, [dbName, graphData]);
 
   return (
     <div className="App">
