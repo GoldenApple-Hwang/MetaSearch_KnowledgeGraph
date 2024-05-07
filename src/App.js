@@ -136,8 +136,7 @@ function App() {
       .enter()
       .append("text")
       .style("text-anchor", "middle")
-      .style("fill", "#555")
-      .style("fill", "red")
+      .style("fill", "rgb(255, 115, 0)")
       .append("textPath") // textPath를 사용하여 path 위에 텍스트를 놓음
       .attr("xlink:href", (d, i) => `#linkPath-${i}`) // 해당 링크의 path ID를 참조
       .attr("startOffset", "50%") // 선의 가운데에 텍스트가 오도록 설정
