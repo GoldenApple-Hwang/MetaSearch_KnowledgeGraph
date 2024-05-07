@@ -150,7 +150,7 @@ function App() {
       .append("path")
       .attr("class", "link-hover")
       .attr("id", (d) => `link-${d.id}`) // 데이터를 기반으로 ID 설정
-      .attr("stroke-width", 10) // 충분히 넓게 만들어 사용자가 쉽게 호버할 수 있게 합니다.
+      .attr("stroke-width", 8) // 충분히 넓게 만들어 사용자가 쉽게 호버할 수 있게 합니다.
       .attr("stroke", "transparent") // 기본적으로 보이지 않게 만듭니다.
       .attr("fill", "none")
       // .on("mouseover", function (event, d) { //이거는 모바일에서 필요 없는 기능임
