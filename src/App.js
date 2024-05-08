@@ -201,11 +201,11 @@ function App() {
       .append("rect")
       .attr("x", -35)
       .attr("y", -35)
-      .attr("width", 60)
-      .attr("height", 60)
-      .style("stroke", "rgba(21, 169, 255, 0.5)") // 초기 테두리 스타일 지정
+      .attr("width", 70)
+      .attr("height", 70)
+      //.style("stroke", "rgba(255, 34, 34, 0.5)") // 초기 테두리 스타일 지정
       .style("stroke-width", "8px")
-      .style("fill", "none")
+      .style("fill", "rgba(255, 34, 34, 0.5)")
       .style("visibility", "hidden") // 처음에는 테두리를 숨김
       .attr("class", "image-border"); // 클래스 이름 추가
 
@@ -213,8 +213,8 @@ function App() {
       .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링 사진 노드
       .append("image")
       .attr("href", (d) => `/images/${dbName}/${d.label}`) // 서버의 public/images/${dbName} 위치에 있는 사진
-      .attr("x", -35)
-      .attr("y", -35)
+      .attr("x", -30)
+      .attr("y", -30)
       .attr("width", 60)
       .attr("height", 60)
       .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
