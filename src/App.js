@@ -136,7 +136,7 @@ function App() {
       .enter()
       .append("text")
       .style("text-anchor", "middle")
-      .style("fill", "rgb(255, 115, 0)")
+      .style("fill", "green")
       .append("textPath") // textPath를 사용하여 path 위에 텍스트를 놓음
       .attr("xlink:href", (d, i) => `#linkPath-${i}`) // 해당 링크의 path ID를 참조
       .attr("startOffset", "50%") // 선의 가운데에 텍스트가 오도록 설정
@@ -192,7 +192,7 @@ function App() {
       .filter((d) => d.group !== 0) //사진 노드가 아닌 노드
       .append("circle") //이 노드는 그냥 원으로 표현
       .attr("r", 30)
-      .attr("fill", "#4daf62")
+      .attr("fill", "#68c2a3")
       .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
 
     //이미지에 테두리를 추가하기 위한 사각현 노드
