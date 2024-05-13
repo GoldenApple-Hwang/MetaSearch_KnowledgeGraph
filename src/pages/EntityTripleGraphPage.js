@@ -36,7 +36,6 @@ const EntityTripleGraphPage = () => {
 
     return (
         <div>
-            <h1>Entity Triple Graph for - {entity}</h1>
             <EntityTripleGraph data={data} dbName={dbName}/>
         </div>
     );
