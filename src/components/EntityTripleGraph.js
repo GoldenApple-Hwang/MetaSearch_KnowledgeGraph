@@ -1,9 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import { useNavigate } from "react-router-dom";
 
 const EntityTripleGraph = ({ data, dbName }) => {
   const svgRef = useRef();
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+  const [selectedNode, setSelectedNode] = useState(null); // 클릭된 노드 데이터 저장
+  const navigate = useNavigate(); // navigate 함수 사용
 
   const width = 800; //1440 × 2560
   const height = 600;
@@ -59,9 +62,14 @@ const EntityTripleGraph = ({ data, dbName }) => {
       )
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("charge", d3.forceManyBody().strength(-1500))
-      .force("collide", d3.forceCollide(50)) //.strength(0.7))
+      .force("collide", d3.forceCollide(50).strength(0.7))
       .force("x", d3.forceX())
-      .force("y", d3.forceY());
+      .force("y", d3.forceY())
+      .alphaTarget(0.3)
+      .alphaDecay(0.05);
+
+    // 시뮬레이션을 300번 사전 실행
+    for (let i = 0; i < 10; ++i) simulation.tick();
 
     // svg
     //   .attr("viewBox", [-width / 2, -height / 2, width, height])
@@ -193,25 +201,43 @@ const EntityTripleGraph = ({ data, dbName }) => {
         });
     }
 
-    //테두리 적용 코드
+    //클릭했을 때 함수
     function handleNodeClick(event, d) {
-        setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
-  
-        // 모든 노드의 하이라이트 클래스를 제거합니다.
-        d3.selectAll(".node circle").classed("highlight", false);
-        d3.selectAll(".node .image-border").style("visibility", "hidden");
-  
-        // 클릭된 노드가 이미지 노드인 경우
-        if (d.group === 0) {
-          // 이미지 노드의 테두리 표시
-          d3.select(event.currentTarget.parentNode)
-            .select(".image-border")
-            .style("visibility", "visible");
-        } else {
-          // 일반 노드(원)의 하이라이트 클래스 적용
-          d3.select(event.currentTarget).classed("highlight", true);
-        }
+      setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
+
+      // 모든 노드의 하이라이트 클래스를 제거합니다.
+      d3.selectAll(".node circle").classed("highlight", false);
+      d3.selectAll(".node .image-border").style("visibility", "hidden");
+
+      // 클릭된 노드가 이미지 노드인 경우
+      if (d.group === 0) {
+        // 이미지 노드의 테두리 표시
+        d3.select(event.currentTarget.parentNode)
+          .select(".image-border")
+          .style("visibility", "visible");
+      } else {
+        // 일반 노드(원)의 하이라이트 클래스 적용
+        d3.select(event.currentTarget).classed("highlight", true);
       }
+
+      // 클릭된 노드를 화면의 중앙으로 부드럽게 이동시키고 확대
+      const scale = 1.5; // 확대할 스케일
+      const x = width / 2 - d.x * scale;
+      const y = height / 2 - d.y * scale;
+      const transform = d3.zoomIdentity.translate(x, y).scale(scale);
+
+      svg
+        .transition()
+        .duration(500)
+        .call(zoom.transform, transform)
+        .on("end", () => {
+          // 페이지 이동 전 줌 상태를 즉시 초기화
+          svg.call(zoom.transform, d3.zoomIdentity); // 줌 상태를 즉시 초기화
+
+          // 페이지 이동 실행
+          navigate(`/entityTripleGraph/${dbName}/${d.label}`);
+        });
+    }
 
     simulation.on("tick", () => {
       // 링크의 path를 업데이트
