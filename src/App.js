@@ -72,13 +72,16 @@ function App() {
           .id((d) => d.id)
           .distance(200)
       )
-      .force("charge", d3.forceManyBody().strength(-1000))
+      .force("charge", d3.forceManyBody().strength(-2000))
       .force("collide", d3.forceCollide(50)) //.strength(0.7))
       .force("x", d3.forceX())
       .force("y", d3.forceY());
 
     // SVG 내부를 초기화하여 이전 그래프 제거
     d3.select(svgRef.current).selectAll("*").remove();
+
+    // 시뮬레이션을 100번 사전 실행
+    for (let i = 0; i < 100; ++i) simulation.tick();
 
     const svg = d3.select(svgRef.current);
 
@@ -195,7 +198,7 @@ function App() {
       .attr("fill", "#68c2a3")
       .on("click", handleNodeClick); // 공통 클릭 이벤트 적용
 
-    //이미지에 테두리를 추가하기 위한 사각현 노드
+    //이미지에 테두리를 추가하기 위한 사각형 노드
     node
       .filter((d) => d.group === 0) // group 값이 0인 노드만 필터링 사진 노드
       .append("rect")
