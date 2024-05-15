@@ -22,7 +22,7 @@ function App() {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://113.198.85.4/api/graphData/${dbName}`
+            `http://113.198.85.6/api/graphData/${dbName}`
           );
           if (!response.ok) {
             throw new Error("Network response was not ok");

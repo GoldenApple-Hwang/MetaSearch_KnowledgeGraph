@@ -7,7 +7,7 @@ const EntityTripleGraphPage = () => {
     const { dbName, entity } = useParams();  // URL에서 dbName 파라미터 추출
 
     useEffect(() => {
-        const apiUrl = 'http://113.198.85.4/graph/entitytripledata';
+        const apiUrl = 'http://113.198.85.6/graph/entitytripledata';
         const fetchData = async () => {
             try {
                 const response = await fetch(apiUrl, {

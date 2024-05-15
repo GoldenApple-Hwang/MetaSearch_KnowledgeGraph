@@ -7,7 +7,7 @@ const PeopleBubbleChartPage = () => {
     const { dbName } = useParams();  // URL에서 dbName 파라미터 추출
 
     useEffect(() => {
-        const apiUrl = `http://113.198.85.4/api/peoplebubblechart/${dbName}`; // 실제 배포 시 도메인 주소로 변경 필요
+        const apiUrl = `http://113.198.85.6/api/peoplebubblechart/${dbName}`; // 실제 배포 시 도메인 주소로 변경 필요
 
         const fetchData = async () => {
             try {
