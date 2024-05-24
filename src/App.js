@@ -248,11 +248,11 @@ function App() {
       d3.selectAll(".link-hover").each(function (linkData) {
         if (linkData.source.id === d.id || linkData.target.id === d.id) {
           const isActive = d3.select(this).classed("active");
-          d3.select(this).classed("active", !isActive);
-          d3.select(this).attr(
-            "stroke",
-            isActive ? "transparent" : "rgba(21, 169, 255, 0.5)"
-          );
+          // 이미 활성화된 링크는 변경하지 않고, 비활성 상태인 링크만 활성화합니다.
+          if (!isActive) {
+            d3.select(this).classed("active", true);
+            d3.select(this).attr("stroke", "rgba(21, 169, 255, 0.5)");
+          }
         } else {
           d3.select(this).classed("active", false);
           d3.select(this).attr("stroke", "transparent");
