@@ -8,8 +8,8 @@ const EntityTripleGraph = ({ data, dbName }) => {
   const [selectedNode, setSelectedNode] = useState(null); // 클릭된 노드 데이터 저장
   const navigate = useNavigate(); // navigate 함수 사용
 
-  const width = 800; //1440 × 2560
-  const height = 600;
+  const width = 1000; //1440 × 2560
+  const height = 1000;
 
   // 데이터 가공을 위한 useEffect
   useEffect(() => {
