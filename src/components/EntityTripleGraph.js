@@ -180,7 +180,8 @@ const EntityTripleGraph = ({ data, dbName }) => {
       .attr("text-anchor", "middle")
       .attr("dy", ".35em")
       .style("fill", "black")
-      .attr("font-size", 15);
+      .attr("font-size", 15)
+      .on("click", handleNodeClick);
 
     function drag(simulation) {
       return d3
@@ -201,7 +202,18 @@ const EntityTripleGraph = ({ data, dbName }) => {
         });
     }
 
-    //클릭했을 때 함수
+    //안드로이드와 통신 할 함수
+    function sendLabelToAndroid(event, d) {
+      console.log(`사진 노드 ${d.label}`);
+
+      if (window.Android && window.Android.receivePhotoName) {
+        window.Android.receivePhotoName(d.label); // d.label은 클릭된 노드의 사진 이름
+      } else {
+        console.log("Android interface not found. ");
+      }
+    }
+
+    //노드를 클릭했을 때 함수
     function handleNodeClick(event, d) {
       setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
 
@@ -215,6 +227,12 @@ const EntityTripleGraph = ({ data, dbName }) => {
         d3.select(event.currentTarget.parentNode)
           .select(".image-border")
           .style("visibility", "visible");
+
+        sendLabelToAndroid(event, d); // 안드로이드와 통신 할 함수
+      } else if (event.target.tagName === "text") {
+        const parentNode = d3.select(event.target.parentNode);
+        parentNode.classed("highlight", true); // 부모 노드에 하이라이트 적용
+        d3.select(event.target).style("stroke", "none"); // 텍스트의 스트로크를 없애기
       } else {
         // 일반 노드(원)의 하이라이트 클래스 적용
         d3.select(event.currentTarget).classed("highlight", true);
