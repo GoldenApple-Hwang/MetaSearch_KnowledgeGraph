@@ -251,7 +251,7 @@ const EntityTripleGraph = ({ data, dbName }) => {
       }
 
       // 클릭된 노드를 화면의 중앙으로 부드럽게 이동시키고 확대
-      const scale = 1.5; // 확대할 스케일
+      const scale = 2.5; // 확대할 스케일
       const x = width / 2 - d.x * scale;
       const y = height / 2 - d.y * scale;
       const transform = d3.zoomIdentity.translate(x, y).scale(scale);
