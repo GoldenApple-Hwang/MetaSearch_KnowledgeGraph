@@ -68,12 +68,10 @@ const EntityTripleGraph = ({ data, dbName }) => {
       .alphaTarget(0.3)
       .alphaDecay(0.05);
 
-    // 시뮬레이션을 300번 사전 실행
-    for (let i = 0; i < 10; ++i) simulation.tick();
-
-    // svg
-    //   .attr("viewBox", [-width / 2, -height / 2, width, height])
-    //   .attr("style", "max-width: 100%; height: auto;");
+    svg
+      //.attr("viewBox", [width / 2, height / 2, width, height])
+      //.attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("style", "max-width: 100%; height: auto;");
 
     //줌 대상이 될 g 요소를 추가
     const g = svg.append("g");
@@ -84,7 +82,21 @@ const EntityTripleGraph = ({ data, dbName }) => {
     };
 
     //zoom 기능 정의. scaleExtent 부분을 수정하여 zoom의 한계를 조정할 수 있음
-    const zoom = d3.zoom().scaleExtent([0.1, 8]).on("zoom", zoomed);
+    const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+
+    // 확대 배율
+    const scale = 1.7;
+    // const initialX = (width / 2) * (1 - 1 / scale);
+    // const initialY = (height / 2) * (1 - 1 / scale);
+
+    // 초기 확대 배율을 설정하고, 중심 위치를 조정
+    const initialTransform = d3.zoomIdentity
+      .translate((width / 2) * (1 - scale), (height / 2) * (1 - scale))
+      // .translate(initialX, initialY)
+      .scale(scale);
+
+    // svg 요소에 초기 변환을 적용
+    svg.call(zoom.transform, initialTransform);
 
     // svg에 zoom 기능을 적용, 하지만 실제 변환은 g 요소에 적용됨
     svg.call(zoom);
