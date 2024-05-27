@@ -227,6 +227,7 @@ const EntityTripleGraph = ({ data, dbName }) => {
 
     //노드를 클릭했을 때 함수
     function handleNodeClick(event, d) {
+      console.log(`모든 노드 ${d.label}`);
       setSelectedNode(d); // 클릭된 노드의 데이터를 상태에 저장
 
       // 모든 노드의 하이라이트 클래스를 제거합니다.
