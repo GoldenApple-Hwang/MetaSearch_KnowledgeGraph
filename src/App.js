@@ -45,7 +45,15 @@ function App() {
     // "텍스트", "방향", "플래시"라는 타입을 제외한 링크 필터링
     const links = graphData.links.filter(
       (link) =>
-        link.type !== "텍스트" && link.type !== "방향" && link.type !== "플래시"
+        link.type !== "텍스트" &&
+        link.type !== "방향" &&
+        link.type !== "플래시" &&
+        link.type !== "해상도" &&
+        link.type !== "형식화된 주소" &&
+        link.type !== "밤/낮" &&
+        link.type !== "우편번호" &&
+        link.type !== "건물" &&
+        link.type !== "년"
     );
 
     // 활성화된 링크에서 사용되는 모든 노드 ID 수집
