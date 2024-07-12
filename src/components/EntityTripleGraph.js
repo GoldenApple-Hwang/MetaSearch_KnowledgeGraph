@@ -21,7 +21,7 @@ const EntityTripleGraph = ({ data, dbName }) => {
 
     const links = rawLinks.filter(
       (link) =>
-        link.type !== "텍스트" && link.type !== "방향" && link.type !== "플래시"
+        link.type !== "텍스트" && link.type !== "방향" && link.type !== "플래시" && link.type !== "형식화된 주소"
     );
     const nodeIds = new Set(
       links.flatMap((link) => [link.source, link.target])
