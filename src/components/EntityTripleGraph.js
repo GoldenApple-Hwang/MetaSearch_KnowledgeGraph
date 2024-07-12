@@ -82,7 +82,7 @@ const EntityTripleGraph = ({ data, dbName }) => {
     };
 
     //zoom 기능 정의. scaleExtent 부분을 수정하여 zoom의 한계를 조정할 수 있음
-    const zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+    const zoom = d3.zoom().scaleExtent([0.5, 8]).on("zoom", zoomed);
 
     // 확대 배율
     const scale = 1.7;
